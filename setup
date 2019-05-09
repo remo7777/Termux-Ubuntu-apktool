@@ -1,0 +1,157 @@
+#!/bin/bash
+
+spin () {
+
+local pid=$!
+local delay=0.25
+local spinner=( '█■■■■' '■█■■■' '■■█■■' '■■■█■' '■■■■█' )
+
+while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+
+for i in "${spinner[@]}"
+do
+	tput civis
+	echo -ne "\033[34m\r[*] Downloading..please wait.........\e[33m[\033[32m$i\033[33m]\033[0m   ";
+	sleep $delay
+	printf "\b\b\b\b\b\b\b\b";
+done
+done
+printf "   \b\b\b\b\b"
+tput cnorm
+printf "\e[1;33m [Done]\e[0m";
+echo "";
+
+}
+
+
+# note this is only print 7 charecters
+pub () {
+apt update;
+apt install apkgigner -y
+sleep 2
+if [ -e $PREFIX/lib/apktool.jar ]; then
+rm $PREFIX/lib/apktool.jar
+fi
+if [ -e $PREFIX/bin/apktool ]; then
+rm $PREFIX/bin/apktool
+fi
+
+#if [ -e $PREFIX/bin/dalvikvm ]; then
+	#sed -i "s/export/#export/g" $PREFIX/bin/dalvikvm
+#else
+	#sleep 2
+#fi
+#cp apktool $PREFIX/bin/
+#cp signapk $PREFIX/bin/
+#cp apktool.jar $PREFIX/lib/
+#cp signapk.jar $PREFIX/lib/
+if [ -e $PREFIX/lib/publickey.x509.pem ]; then
+	rm $PREFIX/lib/publickey.x509.pem
+fi
+if [ -e $PREFIX/lib/publickey.pk8 ]; then
+	rm $PREFIX/lib/publickey.pk8
+fi
+#cp publickey.x509.pem $PREFIX/lib/
+#cp publickey.pk8 $PREFIX/lib/
+#chmod 700 $PREFIX/bin/apktool
+#chmod 700 $PREFIX/bin/signapk
+#sleep 2
+if [ -e $PREFIX/bin]; then
+echo
+else
+cp bind-apk $PREFIX/bin/
+chmod 700 $PREFIX/bin/bind-apk
+fi
+cp ubuntu.sh ~/
+#bash ~/ubuntu.sh
+#if [ -d ~/ubuntu-fs ]; then
+#	cp u-setup -r ~/ubuntu-fs/root/
+#	fi
+
+if [ -d "$HOME/metasploit-framework" ]; then
+if [ -e "$HOME/metasploit-framework/lib/msf/core/payload/apk.rb.old" ]; then
+	rm ~/metasploit-framework/lib/msf/core/payload/apk.rb
+
+	cp apk.rb ~/metasploit-framework/lib/msf/core/payload/
+else
+	mv ~/metasploit-framework/lib/msf/core/payload/apk.rb ~/metasploit-framework/lib/msf/core/payload/apk.rb.old
+	cp apk.rb ~/metasploit-framework/lib/msf/core/payload/
+	fi
+else
+	sleep 2
+fi
+if [ -d "$PREFIX/opt/metasploit-framework" ]; then
+if [ -e "$PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb.old" ]; then
+	rm $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb
+	cp apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb
+else
+	mv $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb.old
+	cp apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/
+fi
+fi
+
+}
+if [[ $1 = "ubuntu" ]]; then
+if [ -d ~/ubuntu-fs ]; then
+	cp u-setup -r ~/ubuntu-fs/root/
+	echo "[#] Successfully copied u-setup file on ubuntu-fs.."
+else
+	echo "Plesae install ubuntu-fs on home directory"
+fi
+else
+clear;
+echo "";
+echo -e "\e[1;34m[*] \e[32minstall packages....\e[0m";
+echo "";
+apt update -y &> /dev/null;
+apt install figlet pv ncurses-utils binutils coreutils wget git termux-api apksigner -y &> /dev/null;
+termux-wake-lock;
+if [ -e $PREFIX/share/figlet/Remo773.flf ]; then
+	echo -e "\e[1;34m[*] \033[32mRemo773.flf figlet font is present\033[0m";
+	sleep 4
+else
+wget https://raw.githubusercontent.com/remo7777/REMO773/master/Remo773.flf &> /dev/null;
+sleep 3
+cat Remo773.flf >> $PREFIX/share/figlet/Remo773.flf
+sleep 3
+rm Remo773.fif
+fi
+clear;
+echo "";
+echo -e "\033[33m$(figlet -f Remo773 "Bind-Apk")\e[0m"
+echo -e "\e[1;32m
++----------------------------------*/
+Remo773 : (\e[33m9.5.2019\e[32m)
+
+1. Bind-apk
++----------------------------------*/
+\033[0m";
+tput setaf 3;
+read -p  "Do you want to setup this ? (y/n) " PROC33
+
+tput sgr 0
+if [ "$PROC33" = "y" ]; then
+
+echo -e "\e[1;34m[*] \e[32mplease wait..\e[0m";
+pub &> /dev/null & spin;
+sleep 3
+if [ -d "$HOME/metasploit-framework" ]; then
+	echo -e "\e[1;34m[*] \e[32mYour metasploit-framework is present on Home directory....\e[0m";
+elif [ -d "$PREFIX/opt/metasploit-framework" ]; then
+	echo -e "\e[1;34m[*] \e[32mOh You are using Unstable-repo...metasploit-framework..\e[0m";
+	sleep 2
+	echo ""
+else
+	echo -e "\e[1;34m[*] \e[32mYou have to move apk.rb file manually or ask Remo773 about it..\e[0m";
+fi
+#echo -e "\e[1;34m[*] \e[32mNow you can use Apktool on metasploit-framework..\e[0m";
+sleep 3
+#echo -e "\e[1;34m[*] \e[32mAnd you can bind paload on any app like \e[33mFacebookLite.apk \e[32mor \e[33mUcmini.apk..\e[32metc.\e[0m";
+#sleep 3
+echo
+echo "now run 'bash ubuntu.sh' on new session and other setup also.." | pv -qL 13;
+
+fi
+termux-wake-unlock;
+fi
+exit 0
