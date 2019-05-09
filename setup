@@ -104,7 +104,7 @@ echo "";
 echo -e "\e[1;34m[*] \e[32minstall packages....\e[0m";
 echo "";
 apt update -y &> /dev/null;
-apt install figlet pv ncurses-utils binutils coreutils wget git termux-api apksigner -y &> /dev/null;
+apt install figlet pv ncurses-utils binutils coreutils wget git termux-api apksigner openssl-tool proot -y &> /dev/null;
 termux-wake-lock;
 if [ -e $PREFIX/share/figlet/Remo773.flf ]; then
 	echo -e "\e[1;34m[*] \033[32mRemo773.flf figlet font is present\033[0m";
