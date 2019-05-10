@@ -56,8 +56,10 @@ fi
 #chmod 700 $PREFIX/bin/apktool
 #chmod 700 $PREFIX/bin/signapk
 #sleep 2
-if [ -e $PREFIX/bin]; then
-echo
+if [ -e $PREFIX/bin/bind-apk ]; then
+rm $PREFIX/bin/bind-apk
+cp bind-apk $PREFIX/bin/
+chmod 700 $PREFIX/bin/bind-apk
 else
 cp bind-apk $PREFIX/bin/
 chmod 700 $PREFIX/bin/bind-apk
@@ -94,9 +96,14 @@ fi
 if [[ $1 = "ubuntu" ]]; then
 if [ -d ~/ubuntu-fs ]; then
 	cp u-setup -r ~/ubuntu-fs/root/
+	cp u-setup/setup ~/ubuntu-fs/root/
+	echo
 	echo "[#] Successfully copied u-setup file on ubuntu-fs.."
+	echo
 else
+	echo
 	echo "Plesae install ubuntu-fs on home directory"
+	echo
 fi
 else
 clear;
@@ -148,8 +155,9 @@ fi
 sleep 3
 #echo -e "\e[1;34m[*] \e[32mAnd you can bind paload on any app like \e[33mFacebookLite.apk \e[32mor \e[33mUcmini.apk..\e[32metc.\e[0m";
 #sleep 3
-echo
-echo "now run 'bash ubuntu.sh' on new session and other setup also.." | pv -qL 13;
+echo $(tput setaf 3)
+echo "now run '$(tput setaf 2)bash ubuntu.sh$(tput setaf 3)' on new session and other setup also.." | pv -qL 13;
+echo $(tput sgr0)
 
 fi
 termux-wake-unlock;
