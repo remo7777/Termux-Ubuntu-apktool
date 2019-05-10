@@ -97,13 +97,13 @@ if [[ $1 = "ubuntu" ]]; then
 if [ -d ~/ubuntu-fs ]; then
 	cp u-setup -r ~/ubuntu-fs/root/
 	cp u-setup/setup ~/ubuntu-fs/root/
-	echo
+	echo $(tput setaf 3)
 	echo "[#] Successfully copied u-setup file on ubuntu-fs.."
-	echo
+	echo $(tput sgr0)
 else
-	echo
-	echo "Plesae install ubuntu-fs on home directory"
-	echo
+	echo $(tput setaf 1)
+	echo "[*] Plesae install ubuntu-fs on home directory"
+	echo $(tput sgr0)
 fi
 else
 clear;
