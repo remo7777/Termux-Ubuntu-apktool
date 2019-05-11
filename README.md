@@ -1,9 +1,9 @@
 
-#Termux-ubuntu-apkool#
+# Termux-ubuntu-apkool #
 
 android app payload embeding tool for termux
 
-##Requirement
+## Requirement
 
 1. 
 metasploit-framwwork (on termux)
@@ -11,7 +11,7 @@ metasploit-framwwork (on termux)
 2. 
 bash shell ( my tool is based on bash shell .. if you want to know which shell you are using on termux then type command `echo $SHELL` or `echo $0` 
 
-##Installation:## ..
+## Installation: ## ..
 
  `git clone https://github.com/remo7777/Termux-ubuntu-apkool.git` 
 
@@ -39,13 +39,13 @@ next
 
  `bash setup` 
 
-##Now tool is ready to use on
+## Now tool is ready to use on
 
 both terminal has same command ( termux and unubtu) which is `bind-apk` 
 
 to know about how to use that bind-apk on both environment check on YouTube
 
-type command on termux it ll redirect on YouTube##
+type command on termux it ll redirect on YouTube ##
 
  👇 
 
