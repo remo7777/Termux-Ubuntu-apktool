@@ -65,6 +65,8 @@ cp bind-apk $PREFIX/bin/
 chmod 700 $PREFIX/bin/bind-apk
 fi
 cp ubuntu.sh ~/
+sleep 2
+rm ubuntu.sh
 #bash ~/ubuntu.sh
 #if [ -d ~/ubuntu-fs ]; then
 #	cp u-setup -r ~/ubuntu-fs/root/
