@@ -69,6 +69,7 @@ sleep 2
 cd ~/
 bash ubuntu.sh
 sleep 1
+rm ubuntu.sh
 cd -
 sleep 0.5
 
