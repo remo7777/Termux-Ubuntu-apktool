@@ -163,7 +163,7 @@ sleep 3
 #echo -e "\e[1;34m[*] \e[32mAnd you can bind paload on any app like \e[33mFacebookLite.apk \e[32mor \e[33mUcmini.apk..\e[32metc.\e[0m";
 #sleep 3
 echo $(tput setaf 3)
-echo "now run '$(tput setaf 2)bash ubuntu.sh$(tput setaf 3)' on new session and other setup also.." | pv -qL 13;
+echo "now run '$(tput setaf 2)bash setup ubuntu$(tput setaf 3)' for push another setup file for ubuntu" | pv -qL 13;
 echo $(tput sgr0)
 
 fi
