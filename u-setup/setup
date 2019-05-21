@@ -2,7 +2,9 @@
 
 dpkg-reconfigure debconf
 apt update && apt upgrade -y
-apt install apktool openjdk-8-jdk -y
+apt install sudo -y
+sudo apt install apt-utils -y
+sudo apt install apktool -y
 cp ~/u-setup/publickey.pk8 /usr/lib/
 cp ~/u-setup/publickey.x509.pem /usr/lib/
 cp ~/u-setup/signapk /usr/bin/
