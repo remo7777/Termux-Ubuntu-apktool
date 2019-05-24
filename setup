@@ -27,7 +27,7 @@ echo "";
 # note this is only print 7 charecters
 pub () {
 apt update;
-apt install apkgigner -y
+#apt install apksigner -y
 sleep 2
 if [ -e $PREFIX/lib/apktool.jar ]; then
 rm $PREFIX/lib/apktool.jar
