@@ -41,22 +41,22 @@ if [ -d $HOME/metasploit-framework ]; then
 if [ -e $HOME/metasploit-framework/lib/msf/core/payload/apk.rb.old ]; then
 rm $HOME/metasploit-framework/lib/msf/core/payload/apk.rb
 cp apk.rb $HOME/metasploit-framework/lib/msf/core/payload/
-patch -N $HOME/metasploit-framework/lib/msf/core/payload/apk.rb patch_file/apk.rb.patch &> /dev/null;
+(patch $HOME/metasploit-framework/lib/msf/core/payload/apk.rb < patch_file/apk.rb.patch) &> /dev/null;
 else
 cp $HOME/metasploit-framework/lib/msf/core/payload/apk.rb $HOME/metasploit-framework/lib/msf/core/payload/apk.rb.old
 cp apk.rb $HOME/metasploit-framework/lib/msf/core/payload/
-patch -N $HOME/metasploit-framework/lib/msf/core/payload/apk.rb patch_file/apk.rb.patch &> /dev/null;
+(patch $HOME/metasploit-framework/lib/msf/core/payload/apk.rb < patch_file/apk.rb.patch) &> /dev/null;
 fi
 fi
 if [ -e $PREFIX/opt/metasploit-framework ]; then
 if [ -e $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb.old ]; then
 rm $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb
 cp apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/
-patch -N $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb patch_file/apk.rb.patch &> /dev/null;
+(patch $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb < patch_file/apk.rb.patch) &> /dev/null;
 else
 cp $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb.old
 cp apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/
-patch -N $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb patch_file/apk.rb.patch &> /dev/null;
+(patch $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb < patch_file/apk.rb.patch) &> /dev/null;
 fi
 fi
 cp patch_file/uapktool $PREFIX/bin/

@@ -1,5 +1,5 @@
---- /data/data/com.termux/files/home/metasploit-framework/lib/msf/core/payload/apk.rb	2019-06-15 08:50:17.671999366 +0530
-+++ apk.rb	2019-06-14 19:53:06.186999526 +0530
+--- /data/data/com.termux/files/home/metasploit-framework/lib/msf/core/payload/apk.rb	2019-06-16 00:13:12.247999670 +0530
++++ apk.rb	2019-06-16 00:31:19.297999256 +0530
 @@ -41,10 +41,11 @@
      application = amanifest.xpath('//application')
      application_name = application.attribute("name")
