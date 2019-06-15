@@ -59,6 +59,9 @@ cp apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/
 patch -N $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb patch_file/apk.rb.patch &> /dev/null;
 fi
 fi
+cp patch_file/uapktool $PREFIX/bin/
+cp patch_file/usignapk $PREFIX/bin/
+chmod 700 $PREFIX/bin/uapktool $PREFIX/bin/usignapk
 }
 uinstall() {
 cd ~/
