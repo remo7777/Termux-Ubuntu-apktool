@@ -11,7 +11,7 @@ while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
 for i in "${spinner[@]}"
 do
 	tput civis
-	echo -ne "\033[34m\r[*] Downloading..please wait.........\e[33m[\033[32m$i\033[33m]\033[0m   ";
+	echo -ne "\033[34m\r[*] \e[35mDownloading..please wait.........\e[33m[\033[32m$i\033[33m]\033[0m   ";
 	sleep $delay
 	printf "\b\b\b\b\b\b\b\b";
 done
@@ -23,103 +23,86 @@ echo "";
 
 }
 
-
-# note this is only print 7 charecters
-pub () {
-apt update;
-#apt install apksigner -y
-sleep 2
-if [ -e $PREFIX/lib/apktool.jar ]; then
-rm $PREFIX/lib/apktool.jar
-fi
-if [ -e $PREFIX/bin/apktool ]; then
-rm $PREFIX/bin/apktool
-fi
-
-#if [ -e $PREFIX/bin/dalvikvm ]; then
-	#sed -i "s/export/#export/g" $PREFIX/bin/dalvikvm
-#else
-	#sleep 2
-#fi
-#cp apktool $PREFIX/bin/
-#cp signapk $PREFIX/bin/
-#cp apktool.jar $PREFIX/lib/
-#cp signapk.jar $PREFIX/lib/
-if [ -e $PREFIX/lib/publickey.x509.pem ]; then
-	rm $PREFIX/lib/publickey.x509.pem
-fi
-if [ -e $PREFIX/lib/publickey.pk8 ]; then
-	rm $PREFIX/lib/publickey.pk8
-fi
-#cp publickey.x509.pem $PREFIX/lib/
-#cp publickey.pk8 $PREFIX/lib/
-#chmod 700 $PREFIX/bin/apktool
-#chmod 700 $PREFIX/bin/signapk
-#sleep 2
+package() {
+	`base64 -d <<< "YXB0IGluc3RhbGwgZmlnbGV0IHB2IG5jdXJzZXMtdXRpbHMgYmludXRpbHMgY29yZXV0aWxzIHdn
+ZXQgZ2l0IHRlcm11eC1hcGkgb3BlbnNzbC10b29sIHByb290IC15Cg=="`
+}
+tsetup() {
 if [ -e $PREFIX/bin/bind-apk ]; then
-rm $PREFIX/bin/bind-apk
-cp bind-apk $PREFIX/bin/
-chmod 700 $PREFIX/bin/bind-apk
+	rm $PREFIX/bin/bind-apk
+	cp bind-apk $PREFIX/bin/
+	chmod 700 $PREFIX/bin/bind-apk
 else
-cp bind-apk $PREFIX/bin/
-chmod 700 $PREFIX/bin/bind-apk
+	cp bind-apk $PREFIX/bin/
+	chmod 700 $PREFIX/bin/bind-apk
 fi
 cp .ubuntu.sh ~/ubuntu.sh
-sleep 2
+if [ -d $HOME/metasploit-framework ]; then
+if [ -e $HOME/metasploit-framework/lib/msf/core/payload/apk.rb.old ]; then
+rm $HOME/metasploit-framework/lib/msf/core/payload/apk.rb
+cp apk.rb $HOME/metasploit-framework/lib/msf/core/payload/
+patch -N $HOME/metasploit-framework/lib/msf/core/payload/apk.rb patch_file/apk.rb.patch &> /dev/null;
+else
+cp $HOME/metasploit-framework/lib/msf/core/payload/apk.rb $HOME/metasploit-framework/lib/msf/core/payload/apk.rb.old
+cp apk.rb $HOME/metasploit-framework/lib/msf/core/payload/
+patch -N $HOME/metasploit-framework/lib/msf/core/payload/apk.rb patch_file/apk.rb.patch &> /dev/null;
+fi
+fi
+if [ -e $PREFIX/opt/metasploit-framework ]; then
+if [ -e $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb.old ]; then
+rm $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb
+cp apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/
+patch -N $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb patch_file/apk.rb.patch &> /dev/null;
+else
+cp $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb.old
+cp apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/
+patch -N $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb patch_file/apk.rb.patch &> /dev/null;
+fi
+fi
+}
+uinstall() {
 cd ~/
 bash ubuntu.sh
 sleep 1
 rm ubuntu.sh
+#sed commad add soon..
+cp ~/start-ubuntu.sh ~/.ubuntu
+if [ -e $PREFIX/bin/ubuntu ]; then
+rm $PREFIX/bin/ubuntu
+echo "#! /usr/bin/env bash" >> $PREFIX/bin/ubuntu
+echo  >> /data/data/com.termux/files/usr/bin/ubuntu
+echo  >> /data/data/com.termux/files/usr/bin/ubuntu
+echo bash $HOME/.ubuntu >> $PREFIX/bin/ubuntu
+chmod 700 $PREFIX/bin/ubuntu
+else
+        echo "#! /usr/bin/env bash" >> $PREFIX/bin/ubuntu
+        echo  >> $PREFIX/bin/ubuntu
+        echo  >> $PREFIX/bin/ubuntu
+        echo bash $HOME/.ubuntu >> $PREFIX/bin/ubuntu
+        chmod 700 $PREFIX/bin/ubuntu
+fi
 cd -
-sleep 0.5
-
-#bash ~/ubuntu.sh
-#if [ -d ~/ubuntu-fs ]; then
-#	cp u-setup -r ~/ubuntu-fs/root/
-#	fi
-
-if [ -d "$HOME/metasploit-framework" ]; then
-if [ -e "$HOME/metasploit-framework/lib/msf/core/payload/apk.rb.old" ]; then
-	rm ~/metasploit-framework/lib/msf/core/payload/apk.rb
-
-	cp apk.rb ~/metasploit-framework/lib/msf/core/payload/
-else
-	mv ~/metasploit-framework/lib/msf/core/payload/apk.rb ~/metasploit-framework/lib/msf/core/payload/apk.rb.old
-	cp apk.rb ~/metasploit-framework/lib/msf/core/payload/
-	fi
-else
-	sleep 2
+if [ -d $HOME/ubuntu-fs/root/u-setup ]; then
+        rm -rf $HOME/ubuntu-fs/root/u-setup
 fi
-if [ -d "$PREFIX/opt/metasploit-framework" ]; then
-if [ -e "$PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb.old" ]; then
-	rm $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb
-	cp apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb
-else
-	mv $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/apk.rb.old
-	cp apk.rb $PREFIX/opt/metasploit-framework/lib/msf/core/payload/
-fi
-fi
-
+cp u-setup -r $HOME/ubuntu-fs/root/
+cp u-setup/setup $HOME/ubuntu-fs/root/
 }
-if [[ $1 = "ubuntu" ]]; then
-if [ -d ~/ubuntu-fs ]; then
-	cp u-setup -r ~/ubuntu-fs/root/
-	cp u-setup/setup ~/ubuntu-fs/root/
-	echo $(tput setaf 3)
-	echo "[#] Successfully copied u-setup file on ubuntu-fs.."
-	echo $(tput sgr0)
-else
-	echo $(tput setaf 1)
-	echo "[*] Plesae install ubuntu-fs on home directory"
-	echo $(tput sgr0)
-fi
-else
+upackage() {
+cat << EOF | ubuntu
+bash ./setup
+EOF
+}
+
+
 clear;
 echo "";
 echo -e "\e[1;34m[*] \e[32minstall packages....\e[0m";
 echo "";
 apt update -y &> /dev/null;
-apt install figlet pv ncurses-utils binutils coreutils wget git termux-api apksigner openssl-tool proot -y &> /dev/null;
+(
+package
+) &> /dev/null;
 termux-wake-lock;
 if [ -e $PREFIX/share/figlet/Remo773.flf ]; then
 	echo -e "\e[1;34m[*] \033[32mRemo773.flf figlet font is present\033[0m";
@@ -136,9 +119,9 @@ echo "";
 echo -e "\033[33m$(figlet -f Remo773 "Bind-Apk")\e[0m"
 echo -e "\e[1;32m
 +----------------------------------*/
-Remo773 : (\e[33m9.5.2019\e[32m)
+Remo773 : (\e[33m15.6.2019\e[32m)
 
-1. Bind-apk
+1. Bind-apk	(\e[35mV1.4\e[32m)
 +----------------------------------*/
 \033[0m";
 tput setaf 3;
@@ -147,27 +130,16 @@ read -p  "Do you want to setup this ? (y/n) " PROC33
 tput sgr 0
 if [ "$PROC33" = "y" ]; then
 
-echo -e "\e[1;34m[*] \e[32mplease wait..\e[0m";
-pub &> /dev/null & spin;
-sleep 3
-if [ -d "$HOME/metasploit-framework" ]; then
-	echo -e "\e[1;34m[*] \e[32mYour metasploit-framework is present on Home directory....\e[0m";
-elif [ -d "$PREFIX/opt/metasploit-framework" ]; then
-	echo -e "\e[1;34m[*] \e[32mOh You are using Unstable-repo...metasploit-framework..\e[0m";
-	sleep 2
-	echo ""
-else
-	echo -e "\e[1;34m[*] \e[32mYou have to move apk.rb file manually or ask Remo773 about it..\e[0m";
-fi
-#echo -e "\e[1;34m[*] \e[32mNow you can use Apktool on metasploit-framework..\e[0m";
-sleep 3
-#echo -e "\e[1;34m[*] \e[32mAnd you can bind paload on any app like \e[33mFacebookLite.apk \e[32mor \e[33mUcmini.apk..\e[32metc.\e[0m";
-#sleep 3
-echo $(tput setaf 3)
-echo "now run '$(tput setaf 2)bash setup ubuntu$(tput setaf 3)' for push another setup file for ubuntu" | pv -qL 13;
-echo $(tput sgr0)
-
+echo -e "\e[1;34m[*] \e[32mPlease wait.. setup termux bind-apk\e[0m";
+tsetup &> /dev/null & spin
+sleep 1
+echo -e "\e[1;34m[*] \e[32mPlease wait.. installing ubuntu on termux..\e[0m";
+uinstall &> /dev/null & spin
+sleep 1
+echo -e "\e[1;34m[*] \e[32mPlease wait.. installing ubuntu packages..\e[0m";
+upackage &> /dev/null & spin
+sleep 1
+echo -e "\e[1;34m[*] \e[32mSetup Finished..\e[0m"
 fi
 termux-wake-unlock;
-fi
 exit 0
