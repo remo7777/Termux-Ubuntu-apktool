@@ -1,10 +1,10 @@
 #!/usr/bin/bash
 
-apt update && apt upgrade -y
-apt install sudo -y
+#apt update && apt upgrade -y
+#apt install sudo -y
 if [ -e /usr/bin/apktool ]; then
-	sudo apt purge apktool -y
-	sudo apt autoremove -y
+	apt purge apktool -y
+	apt autoremove -y
 fi
 apt install apt-utils aapt openjdk-8-jdk wget android-framework-res -y
 if [ -e /usr/bin/bind-apk ]; then
