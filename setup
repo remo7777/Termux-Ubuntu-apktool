@@ -93,6 +93,7 @@ cp u-setup/setup $HOME/ubuntu-fs/root/
 }
 upackage() {
 cat << EOF | ubuntu
+chmod 777 ./setup
 bash ./setup
 EOF
 }
