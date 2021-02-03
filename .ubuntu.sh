@@ -54,7 +54,7 @@ command+=" -b /dev"
 command+=" -b /proc"
 command+=" -b ubuntu-fs/root:/dev/shm"
 ## uncomment the following line to have access to the home directory of termux
-#command+=" -b /data/data/com.termux/files/home:/root"
+command+=" -b /data:/data"
 ## uncomment the following line to mount /sdcard directly to / 
 command+=" -b /sdcard"
 command+=" -w /root"
